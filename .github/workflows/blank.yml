@@ -1,4 +1,4 @@
-name: "fetch byr topten data"
+name: "byr-topten"
 
 on:
   push:
@@ -18,6 +18,9 @@ jobs:
           go-version: 1.16
       - name: generate
         run: ./.github/run.sh
+        env:
+          BYR_USERNAME: ${{ secrets.BYR_USERNAME }}
+          BYR_PASSWORD: ${{ secrets.BYR_PASSWORD }}
       - name: commit
         run: |
           git config --global user.name 'bot'
