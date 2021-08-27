@@ -117,7 +117,6 @@ func getPostList() PostList {
 	text, err := gorequests.New(http.MethodGet, "https://bbs.byr.cn/default").WithHeaders(map[string]string{"x-requested-with": "XMLHttpRequest", "cookie": cookies}).Text()
 	assert(err)
 	bodystr := mahonia.NewDecoder("gbk").ConvertString(string(text))
-	fmt.Println("html:", bodystr)
 	if strings.Contains(bodystr, "您未登录") {
 		panic("您未登录")
 	}
