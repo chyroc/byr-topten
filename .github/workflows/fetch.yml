@@ -1,4 +1,4 @@
-name: "byr-topten"
+name: "fetch"
 
 on:
   push:
@@ -17,14 +17,9 @@ jobs:
         with:
           go-version: 1.16
       - name: generate
-        run: ./.github/run.sh
+        run: ./.github/fetch.sh
         env:
           BYR_USERNAME: ${{ secrets.BYR_USERNAME }}
           BYR_PASSWORD: ${{ secrets.BYR_PASSWORD }}
       - name: commit
-        run: |
-          git config --global user.name 'bot'
-          git config --global user.email 'bot@github.com'
-          git add .
-          git commit -am "commit-by-action: $(date)"
-          git push
+        run: ./.github/commit_fetch.sh
