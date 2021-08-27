@@ -116,7 +116,15 @@ func (r PostList) FormatMD() string {
 
 func (r PostDateList) FormatMD() string {
 	s := strings.Builder{}
-	s.WriteString(fmt.Sprintf("# 北邮人论坛十大热帖\n"))
+	s.WriteString(fmt.Sprintf(`# 北邮人论坛十大热帖
+
+## 项目地址
+
+[项目 GitHub 地址](https://github.com/chyroc/byr-topten)
+
+## 历史数据
+
+`))
 	for _, v := range r {
 		date := v.Date.Format("2006-01-02")
 		s.WriteString(fmt.Sprintf("- [北邮人论坛十大热帖 - %s](./%s.md) ([JSON 格式](./%s.json))\n", date, date, date))
