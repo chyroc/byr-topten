@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -24,7 +23,6 @@ func main() {
 	date := time.Now().In(ZoneGMT).Format("2006-01-02")
 	jsonFilename := fmt.Sprintf("./json/%s.json", date)
 	posts := getPostList()
-	posts = mergeJSON(jsonFilename, posts)
 
 	spew.Dump(posts)
 
@@ -169,40 +167,8 @@ func getPostList() PostList {
 		})
 	}
 
+	sort.Sort(sort.Reverse(PostList(posts)))
 	return posts
-}
-
-func appendFile(filename string, data []byte) error {
-	bs, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-	if bytes.Contains(bs, data) {
-		return nil
-	}
-	return ioutil.WriteFile(filename, []byte(string(bs)+"\n"+string(data)), 0o666)
-}
-
-func mergeJSON(filename string, curr PostList) []*Post {
-	// 从文件读取数据
-	old := []*Post{}
-	bs, _ := ioutil.ReadFile(filename)
-	if len(bs) > 0 {
-		_ = json.Unmarshal(bs, &old)
-	}
-
-	// 合并数据
-	done := map[string]bool{}
-	res := PostList{}
-	for _, v := range append(old, curr...) {
-		if !done[v.URL] {
-			done[v.URL] = true
-			res = append(res, v)
-		}
-	}
-
-	// 返回前十
-	return res.TopTen()
 }
 
 var (

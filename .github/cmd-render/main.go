@@ -43,9 +43,9 @@ func run2MakeJson() {
 func run3MakeHTML() {
 	postDateList := loadPosts()
 	for _, postDate := range postDateList {
-		assert(ioutil.WriteFile(postDate.Date.Format("2006-01-02")+".md", []byte(postDate.Posts.FormatMD()), 0666))
+		assert(ioutil.WriteFile(postDate.Date.In(ZoneGMT).Format("2006-01-02")+".md", []byte(postDate.FormatMD()), 0o666))
 	}
-	assert(ioutil.WriteFile("README.md", []byte(postDateList.FormatMD()), 0666))
+	assert(ioutil.WriteFile("README.md", []byte(postDateList.FormatMD()), 0o666))
 }
 
 func run4CleanFile() {
@@ -103,11 +103,11 @@ func (r PostDateList) Swap(i, j int) {
 	r[i], r[j] = r[j], r[i]
 }
 
-func (r PostList) FormatMD() string {
-	date := time.Now().In(ZoneGMT).Format("2006-01-02")
+func (r PostDate) FormatMD() string {
+	date := r.Date.In(ZoneGMT).Format("2006-01-02")
 	s := strings.Builder{}
 	s.WriteString(fmt.Sprintf("# 北邮人论坛十大热帖 %s\n\n", date))
-	for _, v := range r {
+	for _, v := range r.Posts {
 		s.WriteString(fmt.Sprintf("- [%s](%s) %d\n", v.Title, v.URL, v.Count))
 	}
 	s.WriteString("\n\n")
@@ -126,7 +126,7 @@ func (r PostDateList) FormatMD() string {
 
 `))
 	for _, v := range r {
-		date := v.Date.Format("2006-01-02")
+		date := v.Date.In(ZoneGMT).Format("2006-01-02")
 		s.WriteString(fmt.Sprintf("- [北邮人论坛十大热帖 - %s](./%s.md) ([JSON 格式](./%s.json))\n", date, date, date))
 	}
 	s.WriteString("\n\n")
